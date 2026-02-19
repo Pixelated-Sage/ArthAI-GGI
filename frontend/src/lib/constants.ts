@@ -1,0 +1,22 @@
+export const STOCK_SYMBOLS = [
+  { symbol: "RELIANCE.NS", name: "Reliance Industries" },
+  { symbol: "TCS.NS", name: "Tata Consultancy Services" },
+  { symbol: "HDFCBANK.NS", name: "HDFC Bank" },
+  { symbol: "INFY.NS", name: "Infosys" },
+  { symbol: "ICICIBANK.NS", name: "ICICI Bank" },
+  { symbol: "HINDUNILVR.NS", name: "Hindustan Unilever" },
+  { symbol: "ITC.NS", name: "ITC Limited" },
+  { symbol: "BHARTIARTL.NS", name: "Bharti Airtel" },
+  { symbol: "SBIN.NS", name: "State Bank of India" },
+  { symbol: "LICI.NS", name: "LIC India" },
+  { symbol: "LT.NS", name: "Larsen & Toubro" },
+  { symbol: "BAJFINANCE.NS", name: "Bajaj Finance" },
+  { symbol: "MARUTI.NS", name: "Maruti Suzuki" },
+  { symbol: "ASIANPAINT.NS", name: "Asian Paints" },
+  { symbol: "AXISBANK.NS", name: "Axis Bank" },
+  { symbol: "TITAN.NS", name: "Titan Company" },
+  { symbol: "SUNPHARMA.NS", name: "Sun Pharma" },
+  { symbol: "ULTRACEMCO.NS", name: "UltraTech Cement" },
+  { symbol: "NTPC.NS", name: "NTPC" },
+  // { symbol: "TATAMOTORS.NS", name: "Tata Motors" }
+];

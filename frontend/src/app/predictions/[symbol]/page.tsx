@@ -34,6 +34,7 @@ import { Prediction } from "@/types/start";
 // Types
 interface PredictionData extends Omit<Prediction, 'signal'> {
   signal: string;
+  reasoning?: string;
   max_price?: number;
   min_price?: number;
   volatility?: number;
@@ -86,10 +87,18 @@ export default function PredictionDetail() {
     return () => clearInterval(interval);
   }, [symbol]);
 
-  // Sort history ascending for calculations
+  // Sort history ascending for calculations and deduplicate
   const sortedHistory = useMemo(() => {
     if (!history || history.length === 0) return [];
-    return [...history].sort((a: any, b: any) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    const sorted = [...history].sort((a: any, b: any) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    
+    const uniqueDates = new Map();
+    for (const item of sorted) {
+       const d = new Date(item.timestamp);
+       const dateStr = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+       uniqueDates.set(dateStr, item);
+    }
+    return Array.from(uniqueDates.values());
   }, [history]);
 
   const activePrediction = data?.predictions[selectedHorizon];
@@ -167,13 +176,7 @@ export default function PredictionDetail() {
   }
 
   // Determine overall signal for the selected horizon
-  const predSignal = activePrediction?.change_percent 
-    ? (activePrediction.change_percent > 1.5 ? 'BUY' 
-      : activePrediction.change_percent > 0.5 ? 'LEAN BUY'
-      : activePrediction.change_percent < -1.5 ? 'SELL'
-      : activePrediction.change_percent < -0.5 ? 'LEAN SELL'
-      : 'NEUTRAL')
-    : data.signal || 'NEUTRAL';
+  const predSignal = activePrediction?.signal || 'NEUTRAL';
 
   return (
     <DashboardShell title={symbol} subtitle="Market Analysis">
@@ -303,7 +306,7 @@ export default function PredictionDetail() {
                       <div className="relative z-10 flex flex-col h-full justify-between">
                          <div>
                             <p className="text-white/70 font-bold text-xs uppercase tracking-wider mb-1">Signal ({selectedHorizon})</p>
-                            <h3 className="text-2xl font-black tracking-tight">{data.signal || 'NEUTRAL'}</h3>
+                            <h3 className="text-2xl font-black tracking-tight">{predSignal}</h3>
                          </div>
                          <div className="flex items-center gap-2 mt-3">
                            <Clock size={12} className="opacity-60" />
@@ -314,6 +317,34 @@ export default function PredictionDetail() {
                       </div>
                   </motion.div>
               </div>
+
+              {/* AI Reasoning Insight */}
+              {data.reasoning && (
+                <motion.div 
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                    className="bg-gradient-to-r from-blue-500/5 via-indigo-500/5 to-purple-500/5 border border-blue-500/10 p-6 rounded-[2rem] relative overflow-hidden shadow-sm"
+                >
+                    <div className="absolute top-0 right-0 p-4 opacity-5">
+                        <Zap size={120} />
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-4 relative z-10 items-start">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 shrink-0">
+                             <Zap size={24} fill="currentColor" />
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="text-lg font-black flex items-center gap-2">
+                                AI Analyst Insight
+                                <span className="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full uppercase tracking-wider font-bold shadow-sm">Generated</span>
+                            </h3>
+                            <p className="text-muted-foreground font-medium leading-relaxed text-base max-w-4xl">
+                                {data.reasoning.split("**").map((part, i) => 
+                                    i % 2 === 1 ? <span key={i} className="text-foreground font-bold">{part}</span> : part
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+              )}
 
               {/* Main Chart Section */}
               <div className="bg-card border border-border rounded-[2.5rem] p-4 lg:p-6 shadow-sm flex flex-col gap-4 relative overflow-hidden min-h-[500px]">

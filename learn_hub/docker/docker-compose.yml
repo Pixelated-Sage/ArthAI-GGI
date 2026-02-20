@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: finpredict_timescaledb_learn
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=finpredict_learn
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    networks:
+      - finpredict_learn_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:latest
+    container_name: finpredict_redis_learn
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - finpredict_learn_net
+
+  jupyter:
+    image: jupyter/scipy-notebook:python-3.10
+    container_name: finpredict_jupyter_learn
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../notebooks:/home/jovyan/work
+      - ../demo_data:/home/jovyan/demo_data
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: start-notebook.sh --NotebookApp.token=''
+    networks:
+      - finpredict_learn_net
+
+volumes:
+  timescaledb_data:
+  redis_data:
+
+networks:
+  finpredict_learn_net:
+    driver: bridge

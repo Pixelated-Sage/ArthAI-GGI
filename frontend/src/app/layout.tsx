@@ -6,7 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FinPredict AI - Smart Market Predictions",
+  title: "Arth AI - Smart Market Predictions",
   description: "Advanced AI-powered financial market predictions and analytics.",
 };
 

@@ -33,7 +33,7 @@ export default function AboutPage() {
             className="text-center max-w-2xl mx-auto mb-20"
         >
             <h1 className="text-5xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                FinPredict AI
+                Arth AI
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
                 We are democratizing institutional-grade market intelligence.

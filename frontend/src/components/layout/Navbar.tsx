@@ -44,7 +44,7 @@ export function Navbar() {
             <TrendingUp size={24} />
           </div>
           <span className="text-xl font-bold tracking-tight">
-            FinPredict<span className="text-blue-500">AI</span>
+            Arth<span className="text-blue-500">AI</span>
           </span>
         </Link>
 

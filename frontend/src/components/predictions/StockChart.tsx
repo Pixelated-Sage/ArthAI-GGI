@@ -53,10 +53,21 @@ export const StockChart: React.FC<StockChartProps> = ({ data, predictions, symbo
     return () => clearInterval(timer);
   }, []);
 
-  // Sort data ascending (oldest first)
+  // Sort data ascending (oldest first) and deduplicate by date
   const sortedData = useMemo(() => {
     if (!data || data.length === 0) return [];
-    return [...data].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    
+    // Sort oldest first
+    const sorted = [...data].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+    
+    // Deduplicate by date (keep the last entry for any given day)
+    const uniqueDates = new Map();
+    for (const item of sorted) {
+      const dateStr = toChartTime(item.timestamp);
+      uniqueDates.set(dateStr, item); // Overwrites earlier entries for the same day
+    }
+    
+    return Array.from(uniqueDates.values());
   }, [data]);
 
   // Calculate stats from data
@@ -299,7 +310,7 @@ export const StockChart: React.FC<StockChartProps> = ({ data, predictions, symbo
   return (
     <div className="w-full h-full bg-card/30 backdrop-blur-sm border border-border/50 rounded-3xl overflow-hidden flex flex-col shadow-xl">
       {/* Header */}
-      <div className="px-6 pt-5 pb-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 flex-shrink-0 border-b border-border/30">
+      <div className="px-6 pt-5 pb-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 shrink-0 border-b border-border/30">
         <div>
           <div className="flex items-baseline gap-3 mb-1">
             <h3 className="text-3xl font-black tracking-tight tabular-nums">

@@ -10,6 +10,7 @@ export interface Prediction {
       change?: number;
       change_percent?: number;
       confidence?: number;
+      signal?: string;
     }
   };
 }

@@ -20,7 +20,7 @@ const navItems = [
   { name: 'Dashboard', href: '/predictions', icon: LayoutDashboard, description: 'Market overview & forecasts' },
   { name: 'Watchlist', href: '/watchlist', icon: Eye, description: 'Track your favorites' },
   { name: 'Learn', href: '/learn', icon: GraduationCap, description: 'AI trading guides' },
-  { name: 'About', href: '/about', icon: Info, description: 'How FinPredict works' },
+  { name: 'About', href: '/about', icon: Info, description: 'How Arth works' },
 ];
 
 export function AppSidebar() {
@@ -36,7 +36,7 @@ export function AppSidebar() {
           </div>
           <div>
             <span className="text-lg font-black tracking-tight">
-              FinPredict<span className="text-blue-500">AI</span>
+              Arth<span className="text-blue-500">AI</span>
             </span>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest -mt-0.5">
               Neural Engine v2

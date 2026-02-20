@@ -159,7 +159,7 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-border/50 py-12 text-center text-muted-foreground text-sm">
-        <p>© 2026 FinPredict AI. All market data is delayed by 15 mins. Use for educational purposes.</p>
+        <p>© 2026 Arth AI. All market data is delayed by 15 mins. Use for educational purposes.</p>
       </footer>
     </div>
   );

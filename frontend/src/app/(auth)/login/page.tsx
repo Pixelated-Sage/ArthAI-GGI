@@ -44,7 +44,7 @@ export default function LoginPage() {
              Master the Market with AI
            </h1>
            <p className="text-blue-100 text-lg leading-relaxed mb-8 font-medium">
-             Join thousands of traders using FinPredict's hybrid LSTM-XGBoost models to gain an unfair advantage.
+             Join thousands of traders using Arth's hybrid LSTM-XGBoost models to gain an unfair advantage.
            </p>
            
            <div className="grid grid-cols-2 gap-6">

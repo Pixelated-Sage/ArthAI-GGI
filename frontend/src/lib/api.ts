@@ -84,5 +84,14 @@ export const WatchlistService = {
     return response.data;
   }
 };
+export const ChatService = {
+  sendMessage: async (message: string, sessionId?: string | null) => {
+    const response = await api.post('/chatbot/chat', {
+      message,
+      session_id: sessionId,
+    });
+    return response.data;
+  },
+};
 
 export default api;

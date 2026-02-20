@@ -5,6 +5,7 @@ import { AppSidebar } from '@/components/layout/AppSidebar';
 import { Search, Bell, Monitor, User, ChevronDown, Menu } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/utils/cn';
+import ChatbotWidget from '@/components/ChatbotWidget';
 
 interface DashboardShellProps {
   children: React.ReactNode;
@@ -102,6 +103,7 @@ export default function DashboardShell({
           </div>
         </main>
       </div>
+      <ChatbotWidget />
     </div>
   );
 }

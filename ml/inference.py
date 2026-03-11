@@ -23,7 +23,7 @@ import traceback
 sys.path.append(str(Path(__file__).parent))
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from config import PREDICTION_HORIZONS, LSTM_CONFIG, PROCESSED_DATA_DIR
+from config import PREDICTION_HORIZONS, LSTM_CONFIG, PROCESSED_DATA_DIR, RAW_DATA_DIR
 from src.feature_engineering import FeatureEngineer
 from src.sequence_generator import SequenceGenerator
 from src.lstm_model import MultiHorizonLSTM
@@ -33,7 +33,8 @@ from src.utils import DataScaler, get_feature_columns
 
 import yfinance as yf
 
-MODEL_DIR = Path("/data/models/custom/finpredict")
+BASE_DIR = Path(__file__).parent
+MODEL_DIR = BASE_DIR / "models" / "finpredict"
 
 
 class FinPredictInference:
@@ -337,7 +338,7 @@ class FinPredictInference:
         if csv_path is None:
             csv_path = PROCESSED_DATA_DIR / f"{self.symbol}_features.csv"
             # If processed data exists, use raw + re-engineer
-            raw_path = Path(self.model_dir).parent.parent.parent / "ml" / "data" / "raw" / f"{self.symbol}_raw.csv"
+            raw_path = RAW_DATA_DIR / f"{self.symbol}_raw.csv"
 
             if not csv_path.exists() and raw_path.exists():
                 csv_path = raw_path

@@ -2,7 +2,8 @@
 import shutil
 from pathlib import Path
 
-MODEL_DIR = Path("/data/models/custom/finpredict")
+BASE_DIR = Path(__file__).parent
+MODEL_DIR = BASE_DIR / "ml" / "models" / "finpredict"
 unwanted = [
     "AAPL", "BNB", "BTC", "ETH", "GOOGL", "MSFT", "NVDA", "TSLA",
     "TATAMOTORS.NS" 

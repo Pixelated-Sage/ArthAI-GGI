@@ -112,7 +112,7 @@ async def get_historical_data(
             import json
             from pathlib import Path
 
-            script_path = Path("/home/abhishek/Documents/C02/Products/Finpredict/ml/fetch_data.py")
+            script_path = Path(__file__).resolve().parents[5] / "ml" / "fetch_data.py"
             
             # Using current python executable (assuming yfinance/pandas installed here too)
             # If not, use specific venv python. Backend venv has them.

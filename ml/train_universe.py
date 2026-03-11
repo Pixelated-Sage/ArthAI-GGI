@@ -2,15 +2,9 @@ import subprocess
 import sys
 import time
 
-# The "Big 5" Universe - High quality data, high liquidity
+
 universe = [
-    # "RELIANCE.NS",  # Already done
-    # "TCS.NS",       # Currently running manually
-    # "HDFCBANK.NS",  # Failed in previous run, but let's retry or skip? Let's add it back.
-    "HDFCBANK.NS",
-    "INFY.NS",
-    "ICICIBANK.NS",
-    "SBIN.NS" 
+
 ]
 
 print(f"🌌 Starting FinPredict Universe Training")

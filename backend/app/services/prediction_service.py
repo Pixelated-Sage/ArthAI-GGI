@@ -8,11 +8,6 @@ from app.schemas.prediction import PredictionResponse
 # Configure logging
 logger = logging.getLogger(__name__)
 
-# ML Paths
-ML_ROOT = Path(__file__).resolve().parent.parent.parent.parent / "ml"
-ML_PYTHON = Path("/data/venvs/FinpredictML/bin/python")
-INFERENCE_SCRIPT = ML_ROOT / "inference.py"
-
 import asyncio
 from datetime import datetime, timedelta
 

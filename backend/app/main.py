@@ -62,7 +62,7 @@ async def lifespan(app: FastAPI):
                 logger.info("🚀 Starting ML Model Server on port 8001...")
                 # Correct path: backend/app/main.py -> backend/app -> backend -> Finpredict -> ml
                 ml_root = Path(__file__).resolve().parent.parent.parent / "ml"
-                ml_python = Path("/data/venvs/FinpredictML/bin/python")
+                ml_python = ml_root / ".venv" / "bin" / "python"
                 server_script = ml_root / "server.py"
 
                 if not server_script.exists():

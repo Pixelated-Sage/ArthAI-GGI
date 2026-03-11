@@ -3,11 +3,11 @@ from pathlib import Path
 
 # Paths
 BASE_DIR = Path(__file__).parent
-DATA_DIR = Path("/data/datasets/finpredict")
+DATA_DIR = BASE_DIR / "data" / "datasets"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
-MODELS_DIR = Path(__file__).parent / "data" / "models"  # Local model architecture code
-MODEL_SAVE_DIR = Path("/data/models/custom/finpredict")  # Trained weights (on /data partition)
+MODELS_DIR = BASE_DIR / "data" / "models"  # Local model architecture code
+MODEL_SAVE_DIR = BASE_DIR / "models" / "finpredict"  # Trained weights
 
 # Create directories
 for dir_path in [RAW_DATA_DIR, PROCESSED_DATA_DIR]:
@@ -37,25 +37,9 @@ else:
 # Symbols to train on
 # Symbols to train on (Indian Market - NIFTY 50 Focus)
 STOCK_SYMBOLS = [
-    # "RELIANCE.NS",  # Reliance Industries
-    "TCS.NS",       # Tata Consultancy Services
-    # "HDFCBANK.NS",  # HDFC Bank
-    # "INFY.NS",      # Infosys
-    # "ICICIBANK.NS", # ICICI Bank
-    "HINDUNILVR.NS",# Hindustan Unilever
-    "ITC.NS",       # ITC Limited
-    "BHARTIARTL.NS",# Bharti Airtel
-    # "SBIN.NS",      # State Bank of India
-    "LICI.NS",      # LIC India
-    "LT.NS",        # Larsen & Toubro
-    "BAJFINANCE.NS",# Bajaj Finance
-    "MARUTI.NS",    # Maruti Suzuki
-    "ASIANPAINT.NS",# Asian Paints
-    "AXISBANK.NS",  # Axis Bank
-    "TITAN.NS",     # Titan Company
-    "SUNPHARMA.NS", # Sun Pharma
-    "ULTRACEMCO.NS",# UltraTech Cement
-    "NTPC.NS",      # NTPC
+    "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "HINDUNILVR.NS",
+    "ICICIBANK.NS", "KOTAKBANK.NS", "SBIN.NS", "BAJFINANCE.NS", "HDFC.NS",
+    "ITC.NS", "ASIANPAINT.NS", "MARUTI.NS", "AXISBANK.NS", "WIPRO.NS", "LT.NS", "NESTLEIND.NS", "TITAN.NS", "ULTRACEMCO.NS", "M&M.NS", "POWERGRID.NS", "ADANIGREEN.NS", "DIVISLAB.NS", "DRREDDY.NS", "GRASIM.NS", "SBILIFE.NS", "TATASTEEL.NS", "ONGC.NS", "JSWSTEEL.NS", "HCLTECH.NS", "BAJAJFINSV.NS", "HEROMOTOCO.NS", "CIPLA.NS", "EICHERMOT.NS", "COALINDIA.NS", "TATAMOTORS.NS", "BRITANNIA.NS", "HDFCLIFE.NS", "UPL.NS", "SHREECEM.NS", "ADANIPORTS.NS", "SBIN.NS", "TCS.NS", "RELIANCE.NS", "HDFCBANK.NS", "INFY.NS", "HINDUNILVR.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "BAJFINANCE.NS", "HDFC.NS",
 ]
 # Keep crypto or remove? User said "Indian stock market only for now".
 CRYPTO_SYMBOLS = [] 

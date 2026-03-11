@@ -2,7 +2,8 @@
 from pathlib import Path
 import sys
 
-MODEL_DIR = Path("/data/models/custom/finpredict")
+BASE_DIR = Path(__file__).parent
+MODEL_DIR = BASE_DIR / "ml" / "models" / "finpredict"
 SYMBOLS = [
     "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS",
     "HINDUNILVR.NS", "ITC.NS", "BHARTIARTL.NS", "SBIN.NS", "LICI.NS",

@@ -11,7 +11,7 @@ def setup_logging():
     )
     # Add file logging
     logger.add(
-        f"/data/logs/{settings.PROJECT_NAME.lower().replace(' ', '_')}.log",
+        f"{settings.PROJECT_NAME.lower().replace(' ', '_')}.log",
         rotation="10 MB",
         retention="10 days",
         level="INFO",

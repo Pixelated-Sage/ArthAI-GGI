@@ -46,7 +46,8 @@ from src.utils import DataScaler, split_data, get_feature_columns, save_model_me
 
 
 # Model save directory (on /data partition per rules)
-MODEL_SAVE_DIR = Path("/data/models/custom/finpredict")
+BASE_DIR = Path(__file__).parent
+MODEL_SAVE_DIR = BASE_DIR / "models" / "finpredict"
 
 
 def step_1_load_data(symbol, skip_download=False, save_to_db=True):

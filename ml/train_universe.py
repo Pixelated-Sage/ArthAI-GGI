@@ -3,9 +3,9 @@ import sys
 import time
 
 
-universe = [
+from config import STOCK_SYMBOLS
 
-]
+universe = STOCK_SYMBOLS
 
 print(f"🌌 Starting FinPredict Universe Training")
 print(f"🎯 Targets: {', '.join(universe)}\n")

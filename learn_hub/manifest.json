@@ -1,0 +1,52 @@
+[
+  {
+    "path": "learn_hub/module_00_welcome.md",
+    "description": "Module 0: Orientation, tracks (Trader vs ML Engineer), and setup guide.",
+    "type": "markdown"
+  },
+  {
+    "path": "learn_hub/module_01_stock_essentials.md",
+    "description": "Module 1: Introduction to OHLCV, candlesticks, and returns.",
+    "type": "markdown"
+  },
+  {
+    "path": "learn_hub/notebooks/01_stock_essentials.ipynb",
+    "description": "Interactive notebook for Module 1: Load data, plot candlesticks, calculate SMA.",
+    "type": "notebook"
+  },
+  {
+    "path": "learn_hub/notebooks/02_technical_indicators.ipynb",
+    "description": "Interactive notebook for Module 2: RSI, MACD implementation (TA-Lib optional).",
+    "type": "notebook"
+  },
+  {
+    "path": "learn_hub/demo_data/nifty50_sample.csv",
+    "description": "realistic synthetic NIFTY 50 OHLCV data (~700 rows) for offline development.",
+    "type": "data"
+  },
+  {
+    "path": "learn_hub/quizzes/module_01_quiz.json",
+    "description": "3-question quiz for Module 1 in JSON format.",
+    "type": "quiz"
+  },
+  {
+    "path": "learn_hub/docker/docker-compose.yml",
+    "description": "Docker stack: TimescaleDB, Redis, Jupyter Lab.",
+    "type": "config"
+  },
+  {
+    "path": "learn_hub/requirements.txt",
+    "description": "Python dependencies for the Learn Hub.",
+    "type": "config"
+  },
+  {
+    "path": "learn_hub/references_and_attributions.md",
+    "description": "Citations for libraries and educational content.",
+    "type": "markdown"
+  },
+  {
+    "path": "learn_hub/progress_report.md",
+    "description": "Summary of completed work and next steps.",
+    "type": "markdown"
+  }
+]

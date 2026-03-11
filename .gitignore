@@ -18,7 +18,6 @@ htmlcov/
 dist/
 build/
 config/serviceAccountKey.json
-*.json
 *.egg-info/
 
 # Node.js / Frontend / Mobile
@@ -42,6 +41,7 @@ ml/models/*
 *.pth
 *.pt
 *.onnx
+*.keras
 
 # Jupyter Notebooks
 .ipynb_checkpoints/

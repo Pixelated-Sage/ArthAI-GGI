@@ -6,11 +6,23 @@
 FROM python:3.12-slim AS base
 
 # System deps for psycopg2, lxml, matplotlib
+# System deps for building TA-Lib and other packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
+    g++ \
+    make \
+    wget \
     libpq-dev \
     libxml2-dev \
     libxslt1-dev \
+    && wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz \
+    && tar -xvzf ta-lib-0.4.0-src.tar.gz \
+    && cd ta-lib/ \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
+    && cd .. && rm -rf ta-lib ta-lib-0.4.0-src.tar.gz \
+    && apt-get purge -y --auto-remove wget \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

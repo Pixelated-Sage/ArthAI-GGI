@@ -1,6 +1,6 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getAuth, connectAuthEmulator, Auth } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator, Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -11,15 +11,27 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
-const db = getFirestore(app);
+// Initialize Firebase (Safely for build-time)
+let app: FirebaseApp | undefined, auth: Auth | undefined, db: Firestore | undefined;
+
+const isConfigValid = firebaseConfig.apiKey && firebaseConfig.apiKey !== 'your_api_key_here';
+
+if (isConfigValid) {
+  try {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+    db = getFirestore(app);
+  } catch (error) {
+    console.error("Firebase initialization failed:", error);
+  }
+} else {
+  console.warn("⚠️ Firebase configuration missing or invalid. Skipping initialization.");
+}
 
 // Enable emulators if running locally (optional, can be toggled via env)
-if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
-    connectAuthEmulator(auth, 'http://localhost:9099');
-    connectFirestoreEmulator(db, 'localhost', 8080);
+if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' && auth && db) {
+    connectAuthEmulator(auth as any, 'http://localhost:9099');
+    connectFirestoreEmulator(db as any, 'localhost', 8080);
 }
 
 export { app, auth, db };

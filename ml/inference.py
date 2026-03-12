@@ -23,18 +23,18 @@ import traceback
 sys.path.append(str(Path(__file__).parent))
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from config import PREDICTION_HORIZONS, LSTM_CONFIG, PROCESSED_DATA_DIR, RAW_DATA_DIR
+from config import PREDICTION_HORIZONS, LSTM_CONFIG, PROCESSED_DATA_DIR, RAW_DATA_DIR, MODEL_SAVE_DIR
 from src.feature_engineering import FeatureEngineer
 from src.sequence_generator import SequenceGenerator
 from src.lstm_model import MultiHorizonLSTM
 from src.xgboost_model import MultiHorizonXGBoost
 from src.hybrid_model import HybridPredictor, PredictionResult
 from src.utils import DataScaler, get_feature_columns
-
+ 
 import yfinance as yf
-
+ 
 BASE_DIR = Path(__file__).parent
-MODEL_DIR = BASE_DIR / "models" / "finpredict"
+MODEL_DIR = MODEL_SAVE_DIR
 
 
 class FinPredictInference:

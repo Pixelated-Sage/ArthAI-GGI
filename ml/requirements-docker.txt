@@ -11,6 +11,7 @@ scipy>=1.17
 numpy>=2.0,<3.0
 pandas>=2.3,<3.0
 joblib>=1.5
+TA-Lib>=0.4.32
 
 # Data Sources
 yfinance>=0.2

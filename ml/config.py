@@ -7,7 +7,7 @@ DATA_DIR = BASE_DIR / "data" / "datasets"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 MODELS_DIR = BASE_DIR / "data" / "models"  # Local model architecture code
-MODEL_SAVE_DIR = BASE_DIR / "models" / "finpredict"  # Trained weights
+MODEL_SAVE_DIR = BASE_DIR / "models" / "finpredict_v2"  # Latest V2 models
 
 # Create directories
 for dir_path in [RAW_DATA_DIR, PROCESSED_DATA_DIR]:

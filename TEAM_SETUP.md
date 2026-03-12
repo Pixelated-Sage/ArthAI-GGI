@@ -1,114 +1,99 @@
 # 🚀 FinPredict AI - Team Setup Guide
 
-Welcome to the FinPredict AI team! This document contains the exact steps to get this complicated, multi-architecture (Frontend + Backend + Machine Learning) stack running flawlessly on your local machine.
+Welcome to the FinPredict AI team! This document contains the exact steps to get this legacy ML stack running flawlessly on your local machine.
 
 ---
 
-## 🐳 Option 1: Docker (Recommended for Windows/Team)
+## 🔑 1. Environment Configuration
 
-This is the **easiest and fastest** way to get started. It handles all dependencies, Python versions, and OS differences automatically.
+Before starting, copy the example environment file:
 
-### 1. Prerequisites
+```bash
+cp .env.example .env
+```
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
-- **IMPORTANT (Windows Users)**: Increase Docker RAM to at least **8GB** in `Settings > Resources`.
+**CRITICAL: Firebase Credentials**
+You MUST fill in the `NEXT_PUBLIC_FIREBASE_...` keys in `.env`.
 
-### 2. Quickstart Script
+- If missing, the frontend will build with placeholders, but **Authentication will not work**.
+- If correct, Docker will automatically bake these keys into the Next.js static build.
+
+---
+
+## 🐳 2. Option 1: Docker (Recommended)
+
+Handles all dependencies, Python versions, and OS differences automatically.
+
+### Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
+- **RAM**: Ensure Docker has at least **8GB** allocated (`Settings > Resources`).
+
+### Start the Stack
 
 ```bash
 ./scripts/docker-start.sh
 ```
 
-_(On Windows PowerShell, use: `docker compose up --build`)_
-
-### 3. Verification
+### Verification
 
 - **Frontend**: [http://localhost:3000](http://localhost:3000)
 - **Backend API**: [http://localhost:8000/api/v1](http://localhost:8000/api/v1)
 - **ML Server Health**: [http://localhost:8001/health](http://localhost:8001/health)
 
-### 4. Debugging & Development
+---
 
-- **View Logs**: `docker compose logs -f`
-- **Restart a Service**: `docker compose restart backend`
-- **Rebuild after changes**: `docker compose up -d --build`
+## 🛑 3. Handling Machine Learning Models
+
+**DO NOT push the large `.keras` or `.pkl` model files to GitHub.**
+Place all stock folders (e.g., `RELIANCE.NS/`) inside the V2 directory:
+`ArthAI-GGI/ml/models/finpredict_v2/`
 
 ---
 
-### 🛠️ Troubleshooting & Build Recovery
+## 🛠️ 4. Build Troubleshooting
 
-If your build fails (e.g., `ETIMEDOUT` or `RPC error`), **do not** delete the whole project. Follow these recovery steps:
+If the build hangs or fails:
 
-#### **A. Resume a failed build (Incremental)**
+1. **Sequential Build (Low-RAM Fix)**:
 
-If it failed due to network, just run it again. Docker will skip everything it already finished:
+   ```bash
+   docker compose build ml
+   docker compose build backend
+   docker compose build frontend
+   docker compose up -d
+   ```
 
-```bash
-docker compose build --parallel
-```
-
-#### **B. Reset a "Stuck" Service (Safe Reset)**
-
-If only the `frontend` is failing, reset only that one to save time:
-
-```bash
-# Deletes only the corrupted frontend builder state
-docker compose rm -fs frontend
-docker compose build --no-cache frontend
-```
-
-#### **C. Clear Docker "Hang" (When Docker feels slow)**
-
-Run this to clear only **temporary** build cache (this keeps your images/volumes safe):
-
-```bash
-docker builder prune -f
-```
-
-#### **D. Sequential Build (Low-RAM Laptop Fix)**
-
-If your laptop freezes, build one at a time instead of all 3:
-
-```bash
-docker compose build ml
-docker compose build backend
-docker compose build frontend
-docker compose up -d
-```
+2. **Clean Build (If corruption suspected)**:
+   ```bash
+   docker compose down
+   docker builder prune -f
+   docker compose up --build -d
+   ```
 
 ---
 
-## 🛑 IMPORTANT: Handling The Machine Learning Models
+## 💻 5. Option 2: Manual Setup (Advanced)
 
-**DO NOT push the ML models to Git/GitHub.**
-Place all individual stock folders directly inside this directory:
-`ArthAI-GGI/ml/models/finpredict/`
+### ML Engine (Python 3.12)
 
----
+**Requirement**: You must have `TA-Lib` C-library installed on your OS.
 
-## 💻 Option 2: Manual Local Setup (Advanced/Native Linux)
-
-### 1. ML Engine Setup (Python 3.12 REQUIRED)
+- **Ubuntu**: `sudo apt install libta-lib0-dev`
+- **Arch**: `yay -S ta-lib`
 
 ```bash
 cd ml/
-python3.12 -m venv .venv
-source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+python server.py
 ```
 
-### 2. Backend Setup
+### Backend
 
 ```bash
 cd backend/
-python -m venv .venv
-source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 3. Frontend Setup
-
-```bash
-cd frontend/
-npm install
+uvicorn app.main:app --reload
 ```

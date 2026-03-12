@@ -1,0 +1,63 @@
+# ============================================
+# ArthAI-GGI — Docker Compose
+# One command to run everything: docker compose up
+# ============================================
+
+services:
+  # ── ML Server (TensorFlow + XGBoost) ────────────────────
+  ml:
+    build:
+      context: ./ml
+      dockerfile: Dockerfile
+    container_name: arthai-ml
+    ports:
+      - "8001:8001"
+    volumes:
+      # Mount trained models (shared via Google Drive, not in Git)
+      - ./ml/models:/app/models:ro
+    env_file: .env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Backend (FastAPI) ───────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: arthai-backend
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      # Override ML server URL to use Docker internal DNS
+      ML_SERVER_URL: http://ml:8001
+    depends_on:
+      ml:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    restart: unless-stopped
+
+  # ── Frontend (Next.js) ─────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+    container_name: arthai-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

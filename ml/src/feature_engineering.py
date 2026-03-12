@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import talib
+import yfinance as yf
 from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
@@ -56,6 +57,7 @@ class FeatureEngineer:
     def add_moving_averages(self):
         """Add moving average indicators"""
         print("📊 Adding moving averages...")
+        n = len(self.df)
         
         # Simple Moving Averages (SMA)
         self.features['sma_5'] = talib.SMA(self.df['close'], timeperiod=5)
@@ -66,14 +68,28 @@ class FeatureEngineer:
         
         # Exponential Moving Averages (EMA)
         self.features['ema_12'] = talib.EMA(self.df['close'], timeperiod=12)
+        self.features['ema_20'] = talib.EMA(self.df['close'], timeperiod=20)
         self.features['ema_26'] = talib.EMA(self.df['close'], timeperiod=26)
         self.features['ema_50'] = talib.EMA(self.df['close'], timeperiod=50)
+        self.features['ema_200'] = talib.EMA(self.df['close'], timeperiod=200)
+        
+        # Graceful fallback: if data < 200 rows, SMA/EMA-200 are ALL NaN.
+        # Fall back to the longest available window so we don't nuke all rows.
+        if n < 200:
+            fallback = min(n - 1, 50)  # Use SMA-50 or shorter
+            if self.features['sma_200'].isna().all():
+                self.features['sma_200'] = talib.SMA(self.df['close'], timeperiod=fallback)
+                print(f"   ⚠️ Data too short for SMA-200, using SMA-{fallback} fallback")
+            if self.features['ema_200'].isna().all():
+                self.features['ema_200'] = talib.EMA(self.df['close'], timeperiod=fallback)
+                print(f"   ⚠️ Data too short for EMA-200, using EMA-{fallback} fallback")
         
         # Distance from moving averages
         self.features['dist_sma_20'] = (self.df['close'] - self.features['sma_20']) / self.features['sma_20']
         self.features['dist_sma_50'] = (self.df['close'] - self.features['sma_50']) / self.features['sma_50']
+        self.features['dist_ema_200'] = (self.df['close'] - self.features['ema_200']) / self.features['ema_200']
         
-        print("   ✅ Added 10 moving average features")
+        print(f"   ✅ Added 13 moving average features")
     
     def add_momentum_indicators(self):
         """Add momentum indicators (RSI, MACD, etc.)"""
@@ -213,10 +229,56 @@ class FeatureEngineer:
 
         print("   ✅ Added Market Beta and Relative Strength")
 
+    def add_forex_features(self):
+        """Add USD/INR exchange rate features for FII flow context"""
+        print("💱 Adding USD/INR forex features...")
+        try:
+            # Download USD/INR data covering the same period as the stock
+            start_date = self.df.index.min()
+            end_date = self.df.index.max()
+            forex_df = yf.download(
+                "INR=X", start=start_date, end=end_date,
+                interval="1d", progress=False
+            )
+            if isinstance(forex_df.columns, pd.MultiIndex):
+                forex_df.columns = forex_df.columns.get_level_values(0)
+            forex_df.columns = [c.lower() for c in forex_df.columns]
+
+            if forex_df.empty or len(forex_df) < 20:
+                print("   ⚠️ Insufficient forex data, skipping")
+                return
+
+            # Align to stock index
+            forex = forex_df['close'].reindex(self.features.index).ffill()
+
+            # Daily log return of USD/INR
+            self.features['usdinr_return'] = np.log(forex / forex.shift(1))
+
+            # Distance from 20-day SMA of USD/INR (measures FII pressure)
+            usdinr_sma20 = forex.rolling(window=20).mean()
+            self.features['usdinr_sma20_dist'] = (forex - usdinr_sma20) / usdinr_sma20
+
+            # Fill NaN with neutral values
+            self.features['usdinr_return'] = self.features['usdinr_return'].fillna(0.0)
+            self.features['usdinr_sma20_dist'] = self.features['usdinr_sma20_dist'].fillna(0.0)
+
+            print("   ✅ Added 2 forex features (usdinr_return, usdinr_sma20_dist)")
+        except Exception as e:
+            print(f"   ⚠️ Failed to add forex features: {e}")
+            # Add zero columns so feature count stays consistent
+            self.features['usdinr_return'] = 0.0
+            self.features['usdinr_sma20_dist'] = 0.0
+
     def clean_missing_values(self):
         """Handle missing values (NaN, Inf) after indicator calculations."""
         original_length = len(self.features)
         self.features.replace([np.inf, -np.inf], np.nan, inplace=True)
+        
+        # Backfill leading NaN from indicator warmup periods (e.g. first 50 rows for SMA-50)
+        # This prevents nuking valid data just because of warmup.
+        self.features = self.features.bfill()
+        
+        # Now drop only rows that still have NaN (truly missing data, not warmup)
         self.features.dropna(inplace=True)
         dropped = original_length - len(self.features)
         if dropped > 0:
@@ -234,7 +296,8 @@ class FeatureEngineer:
         
         if self.market_df is not None:
              self.add_market_features()
-             
+
+        self.add_forex_features()
         # Check for NaNs before dropping
         if self.features.iloc[-1].isna().any():
              print("⚠️ Last row contains NaNs! Debugging:")

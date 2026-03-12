@@ -1,0 +1,10 @@
+.venv
+venv
+__pycache__
+*.log
+*.pyc
+.env
+models
+data
+notebooks
+*.zip

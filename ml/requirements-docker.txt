@@ -1,0 +1,32 @@
+# ======================================
+# ArthAI-GGI ML Server — Docker Requirements
+# Clean list of actual dependencies (not pip freeze)
+# ======================================
+
+# ML Core
+tensorflow-cpu>=2.16,<3.0    # CPU-only TF for cross-platform Docker
+scikit-learn>=1.8,<2.0
+xgboost>=2.0
+scipy>=1.17
+numpy>=2.0,<3.0
+pandas>=2.3,<3.0
+joblib>=1.5
+
+# Data Sources
+yfinance>=0.2
+psycopg2-binary>=2.9         # For TimescaleDB access
+beautifulsoup4>=4.12
+requests>=2.32
+lxml>=5.0
+
+# API Server
+fastapi>=0.135,<1.0
+uvicorn[standard]>=0.41
+pydantic>=2.0
+httpx>=0.28
+
+# Config
+python-dotenv>=1.0
+
+# Visualization (used in accuracy/analysis scripts)
+matplotlib>=3.10

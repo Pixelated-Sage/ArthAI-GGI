@@ -53,31 +53,40 @@ async def lifespan(app: FastAPI):
             from pathlib import Path
             import socket
             
-            # Check if port 8001 is already in use
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = sock.connect_ex(('127.0.0.1', 8001))
-            sock.close()
+            # Startup ML Server if URL is localhost and not running
+            ml_url_parts = settings.ML_SERVER_URL.replace("http://", "").replace("https://", "").split(":")
+            ml_host = ml_url_parts[0]
             
-            if result != 0: # Port is closed (free)
-                logger.info("🚀 Starting ML Model Server on port 8001...")
-                # Correct path: backend/app/main.py -> backend/app -> backend -> Finpredict -> ml
-                ml_root = Path(__file__).resolve().parent.parent.parent / "ml"
-                ml_python = ml_root / ".venv" / "bin" / "python"
-                server_script = ml_root / "server.py"
+            is_local = ml_host in ["localhost", "127.0.0.1"]
+            
+            if is_local:
+                # Check if port 8001 is already in use
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                result = sock.connect_ex(('127.0.0.1', 8001))
+                sock.close()
+                
+                if result != 0: # Port is closed (free)
+                    logger.info("🚀 Starting ML Model Server locally on port 8001...")
+                    # Correct path: backend/app/main.py -> backend/app -> backend -> Finpredict -> ml
+                    ml_root = Path(__file__).resolve().parent.parent.parent / "ml"
+                    ml_python = ml_root / ".venv" / "bin" / "python"
+                    server_script = ml_root / "server.py"
 
-                if not server_script.exists():
-                     logger.error(f"❌ ML Server script not found at {server_script}")
+                    if not server_script.exists():
+                         logger.error(f"❌ ML Server script not found at {server_script}")
+                    else:
+                        ml_server_process = subprocess.Popen(
+                            [str(ml_python), str(server_script)],
+                            stdout=subprocess.DEVNULL, 
+                            stderr=subprocess.DEVNULL,
+                            cwd=str(ml_root),
+                            start_new_session=True
+                        )
+                        logger.info(f"✅ ML Server triggered. PID: {ml_server_process.pid}")
                 else:
-                    ml_server_process = subprocess.Popen(
-                        [str(ml_python), str(server_script)],
-                        stdout=subprocess.DEVNULL, 
-                        stderr=subprocess.DEVNULL,
-                        cwd=str(ml_root),
-                        start_new_session=True
-                    )
-                    logger.info(f"✅ ML Server triggered. PID: {ml_server_process.pid}")
+                    logger.info("ℹ️ ML Server already running on port 8001")
             else:
-                logger.info("ℹ️ ML Server already running on port 8001")
+                logger.info(f"ℹ️ Using external ML Server at {settings.ML_SERVER_URL}")
                 
             # Start Background Scheduler
             asyncio.create_task(scheduler_loop())

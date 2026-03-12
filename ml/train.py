@@ -34,6 +34,7 @@ from config import (
     LSTM_CONFIG, XGBOOST_CONFIG,
     PREDICTION_HORIZONS, TRAIN_SPLIT, VALIDATION_SPLIT,
     RAW_DATA_DIR, PROCESSED_DATA_DIR,
+    MODEL_SAVE_DIR_V2,
 )
 from src.data_preparation import DataLoader, DataCleaner
 from src.feature_engineering import FeatureEngineer
@@ -453,7 +454,17 @@ def main():
         "--no-save-db", action="store_true", 
         help="Skip saving downloaded data to DB (Fix for DB hangs)"
     )
+    parser.add_argument(
+        '--version', type=str, default='v1', choices=['v1', 'v2'],
+        help='Model version to train (v1=finpredict/, v2=finpredict_v2/)'
+    )
     args = parser.parse_args()
+
+    # Select save directory based on version
+    global MODEL_SAVE_DIR
+    if args.version == 'v2':
+        MODEL_SAVE_DIR = MODEL_SAVE_DIR_V2
+        print(f"\n🆕 Training V2 models → saving to {MODEL_SAVE_DIR}")
 
     # Ensure model directory exists
     ensure_dir(MODEL_SAVE_DIR)

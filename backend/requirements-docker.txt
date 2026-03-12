@@ -1,0 +1,76 @@
+# ======================================
+# ArthAI-GGI Backend — Docker Requirements
+# CPU-only, no NVIDIA/CUDA dependencies
+# ======================================
+
+# Web Framework
+fastapi>=0.135,<1.0
+uvicorn[standard]>=0.41
+starlette>=0.52
+python-multipart>=0.0.22
+
+# Database
+SQLAlchemy>=2.0
+asyncpg>=0.31
+psycopg2-binary>=2.9
+alembic>=1.18
+greenlet>=3.3
+
+# Redis & Caching
+redis>=7.3
+celery>=5.6
+kombu>=5.6
+
+# Firebase
+firebase_admin>=7.2
+
+# Google AI
+google-generativeai>=0.8
+google-api-python-client>=2.192
+
+# Auth & Security  
+PyJWT>=2.11
+cryptography>=46.0
+python-dotenv>=1.0
+
+# Data & ML (backend uses these for data processing, NOT training)
+numpy>=2.0,<3.0
+pandas>=3.0
+scikit-learn>=1.8
+scipy>=1.17
+yfinance>=1.2
+
+# NLP (sentence embeddings for chatbot/search)
+sentence-transformers>=5.2
+transformers>=5.3
+tokenizers>=0.22
+# CPU-only torch for sentence-transformers
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.10
+
+# HTTP & Networking
+httpx>=0.28
+requests>=2.32
+beautifulsoup4>=4.12
+curl_cffi>=0.13
+
+# Config & Validation
+pydantic>=2.12
+pydantic-settings>=2.13
+python-dateutil>=2.9
+
+# Logging
+loguru>=0.7
+rich>=14.3
+
+# Rate Limiting
+slowapi>=0.1
+
+# CLI
+typer>=0.24
+
+# Misc
+PyYAML>=6.0
+packaging>=26.0
+tqdm>=4.67
+safetensors>=0.7

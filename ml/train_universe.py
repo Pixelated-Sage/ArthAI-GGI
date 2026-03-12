@@ -21,8 +21,10 @@ for i, symbol in enumerate(universe, 1):
         # Call train.py with the specific symbol
         # We use sys.executable to ensure we use the SAME venv python
         # capture_output=False lets logs stream to stdout
-        # NOTE: train.py is inside ml/ folder, need correct relative path
-        cmd = [sys.executable, "ml/train.py", "--symbols", symbol]
+        # Robustly resolve the path to train.py relative to THIS script
+        import os
+        train_script = os.path.join(os.path.dirname(__file__), "train.py")
+        cmd = [sys.executable, train_script, "--symbols", symbol, "--version", "v2"]
         
         result = subprocess.run(cmd, check=True)
         

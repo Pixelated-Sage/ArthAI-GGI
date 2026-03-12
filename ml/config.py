@@ -34,9 +34,16 @@ else:
         "password": os.getenv("TIMESCALE_PASSWORD"),
     }
 
-# Symbols to train on
-# Symbols to train on (Indian Market - NIFTY 50 Focus)
+# Symbols to train on (Indian Market - NIFTY 50 + NIFTY NEXT 50)
+# V1 trained stocks (16): RELIANCE, TCS, HDFCBANK, INFY, ICICIBANK, HINDUNILVR,
+#   ITC, BHARTIARTL, SBIN, LICI, LT, BAJFINANCE, MARUTI, ASIANPAINT, AXISBANK, TITAN
+# V2 expansion (50 new): merged below and deduplicated
 STOCK_SYMBOLS = [
+    # --- V1 Originals (already trained) ---
+    "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS",
+    "HINDUNILVR.NS", "ITC.NS", "BHARTIARTL.NS", "SBIN.NS", "LICI.NS",
+    "LT.NS", "BAJFINANCE.NS", "MARUTI.NS", "ASIANPAINT.NS", "AXISBANK.NS", "TITAN.NS",
+    # --- V2 Expansion ---
     "ADANIENT.NS", "ADANIPORTS.NS", "APOLLOHOSP.NS", "BAJAJ-AUTO.NS",
     "BAJAJFINSV.NS", "BPCL.NS", "BRITANNIA.NS", "CIPLA.NS", "COALINDIA.NS",
     "DIVISLAB.NS", "DRREDDY.NS", "EICHERMOT.NS", "GRASIM.NS", "HCLTECH.NS",
@@ -46,11 +53,15 @@ STOCK_SYMBOLS = [
     "TATASTEEL.NS", "TECHM.NS", "ULTRACEMCO.NS", "UPL.NS", "WIPRO.NS",
     "ZOMATO.NS", "VEDL.NS", "TRENT.NS", "SIEMENS.NS", "SHRIRAMFIN.NS",
     "PNB.NS", "PIIND.NS", "PIDILITIND.NS", "MUTHOOTFIN.NS", "LTIM.NS",
-    "LUPIN.NS", "IOC.NS", "INDIGO.NS", "HAVELLS.NS", "HAL.NS", "GODREJCP.NS"
+    "LUPIN.NS", "IOC.NS", "INDIGO.NS", "HAVELLS.NS", "HAL.NS", "GODREJCP.NS",
 ]
-# Keep crypto or remove? User said "Indian stock market only for now".
-CRYPTO_SYMBOLS = [] 
+CRYPTO_SYMBOLS = []
 ALL_SYMBOLS = STOCK_SYMBOLS
+
+# Model Versioning
+MODEL_VERSION = "v2"
+MODEL_SAVE_DIR_V2 = BASE_DIR / "models" / "finpredict_v2"
+MODEL_SAVE_DIR_V2.mkdir(parents=True, exist_ok=True)
 
 # Model Hyperparameters
 LSTM_CONFIG = {

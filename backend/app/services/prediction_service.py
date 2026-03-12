@@ -4,14 +4,13 @@ import subprocess
 from pathlib import Path
 from typing import Optional
 from app.schemas.prediction import PredictionResponse
+from app.core.config import settings
 
 # Configure logging
 logger = logging.getLogger(__name__)
 
 import asyncio
 from datetime import datetime, timedelta
-
-# ... imports ...
 
 from app.db.redis import redis_client
 
@@ -48,11 +47,12 @@ class PredictionService:
             
             async with httpx.AsyncClient(timeout=180.0) as client:
                 try:
-                    response = await client.get(f"http://localhost:8001/predict/{symbol}")
+                    ml_url = f"{settings.ML_SERVER_URL}/predict/{symbol}"
+                    response = await client.get(ml_url)
                     response.raise_for_status()
                     data = response.json()
                 except httpx.ConnectError:
-                    logger.error("Failed to connect to ML Server at port 8001. Is it running?")
+                    logger.error(f"Failed to connect to ML Server at {settings.ML_SERVER_URL}. Is it running?")
                     return None
                 except httpx.HTTPStatusError as e:
                     if e.response.status_code == 404:

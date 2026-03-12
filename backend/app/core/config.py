@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     # Firebase
     FIREBASE_CREDENTIALS_PATH: str = "config/serviceAccountKey.json"
 
+    # ML Server
+    ML_SERVER_URL: str = "http://localhost:8001"
+
     # LLM / Chatbot
     Gemini_API_KEY: str | None = None
     OLLAMA_HOST: str = "http://localhost:11434"

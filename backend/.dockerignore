@@ -1,0 +1,8 @@
+.venv
+venv
+__pycache__
+*.log
+*.pyc
+.env
+config/serviceAccountKey.json
+tests

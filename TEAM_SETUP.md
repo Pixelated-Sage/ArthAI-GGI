@@ -2,24 +2,44 @@
 
 Welcome to the FinPredict AI team! This document contains the exact steps to get this complicated, multi-architecture (Frontend + Backend + Machine Learning) stack running flawlessly on your local machine.
 
-## 🛑 IMPORTANT: Handling The Machine Learning Models
+---
 
-**DO NOT push the ML models to Git/GitHub.**
-Machine learning models (specifically `.keras`, `.h5`, `.pkl` files) are massive binary blobs. Committing them directly to Git will permanently bloat the repository, make cloning extremely slow, and cause Git to crash.
+## 🐳 Option 1: Docker (Recommended for Windows/Team Comms)
 
-**How to sync models:**
+This is the **easiest and fastest** way to get started. It handles all dependencies, Python versions, and OS differences automatically.
 
-1. The project leader will securely share a zipped folder of the trained models (`RELIANCE.NS`, `TCS.NS`, etc.) through Google Drive, Slack, or AWS S3.
-2. Download and unzip the file.
-3. Place all those individual stock folders directly inside this directory in your local repository:
-   ```text
-   ArthAI-GGI/ml/models/finpredict/
-   ```
-   _(Note: The `ml/models/` folder is already explicitly ignored in `.gitignore`, ensuring your weights are never accidentally committed.)_
+### 1. Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+
+### 2. Quickstart Script
+
+```bash
+./scripts/docker-start.sh
+```
+
+_(On Windows, you can run `docker compose up --build` manually.)_
+
+### 3. Verification
+
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:8000/api/v1](http://localhost:8000/api/v1)
+- **ML Server Health**: [http://localhost:8001/health](http://localhost:8001/health)
+
+### 4. Debugging & Development
+
+- **View Logs**: `docker compose logs -f` (use `-f backend` for just backend)
+- **Restart a Service**: `docker compose restart backend`
+- **Run Shell in Container**: `docker compose exec backend bash`
+- **Rebuild after changes**: `docker compose up -d --build`
 
 ---
 
-## 💻 1. Clone & Core Environment Setup
+## 💻 Option 2: Manual Local Setup (Advanced/Native Linux)
+
+_(Use this if you are a power user and want native performance or are working on the models themselves.)_
+
+### 1. Clone & Core Environment Setup
 
 First, clone the repository to your local machine:
 
@@ -35,6 +55,25 @@ Make sure your system has the following pre-requisites installed:
 - **PostgreSQL** & **Redis**
 
 Create an empty `.env` file at the root of `ArthAI-GGI` and ask the team lead for the secret keys to paste inside it.
+
+---
+
+---
+
+## 🛑 IMPORTANT: Handling The Machine Learning Models
+
+**DO NOT push the ML models to Git/GitHub.**
+Machine learning models (specifically `.keras`, `.h5`, `.pkl` files) are massive binary blobs. Committing them directly to Git will permanently bloat the repository, make cloning extremely slow, and cause Git to crash.
+
+**How to sync models:**
+
+1. The project leader will securely share a zipped folder of the trained models (`RELIANCE.NS`, `TCS.NS`, etc.) through Google Drive, Slack, or AWS S3.
+2. Download and unzip the file.
+3. Place all those individual stock folders directly inside this directory in your local repository:
+   ```text
+   ArthAI-GGI/ml/models/finpredict/
+   ```
+   _(Note: The `ml/models/` folder is already explicitly ignored in `.gitignore`, ensuring your weights are never accidentally committed.)_
 
 ---
 

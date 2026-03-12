@@ -7,7 +7,11 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --production=false
+
+# Add network resilience for npm
+RUN npm config set fetch-retry-maxtimeout 1200000 && \
+    npm config set fetch-retries 10 && \
+    npm ci --production=false
 
 # Stage 2: Build the application
 FROM node:20-alpine AS builder

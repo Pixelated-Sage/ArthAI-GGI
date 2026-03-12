@@ -35,6 +35,49 @@ _(On Windows PowerShell, use: `docker compose up --build`)_
 
 ---
 
+### 🛠️ Troubleshooting & Build Recovery
+
+If your build fails (e.g., `ETIMEDOUT` or `RPC error`), **do not** delete the whole project. Follow these recovery steps:
+
+#### **A. Resume a failed build (Incremental)**
+
+If it failed due to network, just run it again. Docker will skip everything it already finished:
+
+```bash
+docker compose build --parallel
+```
+
+#### **B. Reset a "Stuck" Service (Safe Reset)**
+
+If only the `frontend` is failing, reset only that one to save time:
+
+```bash
+# Deletes only the corrupted frontend builder state
+docker compose rm -fs frontend
+docker compose build --no-cache frontend
+```
+
+#### **C. Clear Docker "Hang" (When Docker feels slow)**
+
+Run this to clear only **temporary** build cache (this keeps your images/volumes safe):
+
+```bash
+docker builder prune -f
+```
+
+#### **D. Sequential Build (Low-RAM Laptop Fix)**
+
+If your laptop freezes, build one at a time instead of all 3:
+
+```bash
+docker compose build ml
+docker compose build backend
+docker compose build frontend
+docker compose up -d
+```
+
+---
+
 ## 🛑 IMPORTANT: Handling The Machine Learning Models
 
 **DO NOT push the ML models to Git/GitHub.**
